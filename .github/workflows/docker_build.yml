@@ -7,7 +7,7 @@ on:
     types: [closed]
 
 env:
-    REGISTRY: dockerhub.io
+    REGISTRY: https://index.docker.io/v1/
     IMAGE_NAME: test-ssa
     IMAGE_TAG: latest
 jobs:
