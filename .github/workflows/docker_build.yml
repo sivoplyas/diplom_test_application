@@ -8,7 +8,7 @@ on:
 
 env:
     REGISTRY: docker.io
-    IMAGE_NAME: ssa
+    IMAGE_NAME: diplom-ssa
     IMAGE_TAG: latest
 jobs:
     build:
@@ -36,4 +36,4 @@ jobs:
               with:
                 context: .
                 push: true
-                tags: ${{ secrets.DOCKER_USER }}/test:1.0
+                tags: ${{ secrets.DOCKER_USER }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_NAME }}
