@@ -7,7 +7,7 @@ on:
     types: [closed]
 
 env:
-    REGISTRY: registry.docker.io
+    REGISTRY: docker.io
     IMAGE_NAME: test-ssa
     IMAGE_TAG: latest
 jobs:
@@ -22,7 +22,7 @@ jobs:
               uses: docker/login-action@v3.0.0
               with:
                 registry: ${{ env.REGISTRY }}
-                username: ${{ secrets.DOCKER_USER }}
+                username: "sivoplyas"
                 password: ${{ secrets.DOCKER_TOKEN }}
       
             - name: Extract metadata (tags, labels) for Docker
