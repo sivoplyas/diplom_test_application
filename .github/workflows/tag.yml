@@ -1,33 +1,26 @@
-name: Auto Tagging
+name: Generate release note
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - closed
 
 jobs:
-  auto-tag:
+  generate:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      
-      - name: Get Latest Version
-        id: get_version
+      - uses: actions/checkout@v3
+      - name: Generate tag
         run: |
-          git fetch --tags
-          git tag --sort=-creatordate | head -n 1 | sed 's/^v//'          
-      
-      - name: Bump Version
-        id: bump_version
-        run: |
-          # Determine the new version based on commit messages
-          NEW_VERSION=$(node scripts/get-new-version.js ${{ github.event.head_commit.message }})
-          echo "New version: $NEW_VERSION"
-          echo "::set-output name=new_version::$NEW_VERSION"          
-
-      - name: Create Tag
-        run: |
-          git tag "v${{ steps.bump_version.outputs.new_version }}"
-          git push origin "v${{ steps.bump_version.outputs.new_version }}"   
+          export TAG_NAME=$(sed -n 6P pubspec.yaml | sed 's/version: //')
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+      - name: Generate release note
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ env.TAG_NAME }}
+          tag_name: ${{ env.TAG_NAME }}
+          generate_release_notes: true
