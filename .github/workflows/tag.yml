@@ -28,10 +28,6 @@ jobs:
  fi
  NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
  echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
-
-    - name: Generate Gitt
-      id: generate_git
-      run: |
  git config user.name "GitHub Actions"
  git config user.email "github-actions@users.noreply.github.com"
  git tag $NEW_TAG
