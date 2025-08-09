@@ -1,20 +1,31 @@
-Вот весь рабочий процесс GitHub Actions, который я собрал:
+name: Bump version
+on:
+ pull_request:
+ types:
+ - closed
+    branches:
+ - main
 
-name: Generate release note
+name: Deploy Application
 
 on:
-  pull_request:
+  push:
     branches:
       - main
-    types:
-      - closed
 
 jobs:
-  generate:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: diplom
+    if: "contains(github.event.head_commit.message, 'deploy application')"
     steps:
-      - uses: actions/checkout@v3
-      - name: Generate tag
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+          fetch-depth: '0'
+
+    - name: Generate Git Tag
+      id: generate_tag
+      
       run: |
         VERSION_PREFIX="v"
         VERSION_MAJOR_MINOR="1.0"
