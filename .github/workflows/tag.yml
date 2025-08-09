@@ -1,4 +1,4 @@
-name: Deploy Application
+name: Auto Tagging
 
 on:
   push:
@@ -6,29 +6,28 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: diplom
-    if: "contains(github.event.head_commit.message, 'deploy application')"
+  auto-tag:
+    runs-on: ubuntu-latest
+    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-          fetch-depth: '0'
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      
+      - name: Get Latest Version
+        id: get_version
+        run: |
+          git fetch --tags
+          git tag --sort=-creatordate | head -n 1 | sed 's/^v//'          
+      
+      - name: Bump Version
+        id: bump_version
+        run: |
+          # Determine the new version based on commit messages
+          NEW_VERSION=$(node scripts/get-new-version.js ${{ github.event.head_commit.message }})
+          echo "New version: $NEW_VERSION"
+          echo "::set-output name=new_version::$NEW_VERSION"          
 
-    - name: Generate Git Tag
-      id: generate_tag
-      run: |
- VERSION_PREFIX="v"
- VERSION_MAJOR_MINOR="1.0"
- VERSION_PATCH=$(git tag --list "${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.*" --sort=-version:refname | head -n 1 | grep -oE '[0-9]+$')
- if [ -z "$VERSION_PATCH" ]; then
- VERSION_PATCH=0
- else
- VERSION_PATCH=$((VERSION_PATCH + 1))
- fi
- NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
- echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
- git config user.name "GitHub Actions"
- git config user.email "github-actions@users.noreply.github.com"
- git tag $NEW_TAG
- git push origin $NEW_TAG
+      - name: Create Tag
+        run: |
+          git tag "v${{ steps.bump_version.outputs.new_version }}"
+          git push origin "v${{ steps.bump_version.outputs.new_version }}"   
