@@ -26,8 +26,7 @@ jobs:
           VERSION_PATCH=0
         else
           VERSION_PATCH=$((VERSION_PATCH + 1))
-          NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
-          echo "Generated new tag: $NEW_TAG"
+          echo "VERSION_PATCH: $VERSION_PATCH"
         fi
          NEW_TAG="${VERSION_PREFIX}${VERSION_MAJOR_MINOR}.${VERSION_PATCH}"
          echo "Generated new tag: $NEW_TAG"
