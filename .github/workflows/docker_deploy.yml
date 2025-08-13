@@ -37,5 +37,5 @@ jobs:
             - name: Deploy k8s
               run: |
                 mkdir -p ~/.kube && echo "${{ secrets.KUBE_CONFIG_BASE64_DATA }}" | base64 -d > ~/.kube/config
-                kubectl get nodes 
-                helm repo list
+                helm upgrade --install ssa-app-test -f ./helm/. --namespace ssa --create-namespace --wait --set image.repository="${{ secrets.DOCKER_USER }}/${{ env.IMAGE_NAME }}" --set image.tag="${{ github.ref_name }}"
+                
