@@ -38,3 +38,4 @@ jobs:
               run: |
                 mkdir -p ~/.kube && echo "${{ secrets.KUBE_CONFIG_BASE64_DATA }}" | base64 -d > ~/.kube/config
                 kubectl get nodes 
+                helm repo list
