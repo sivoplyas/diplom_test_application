@@ -1,5 +1,7 @@
 FROM nginx:latest
-COPY index.html /usr/share/nginx/html
-COPY picture.jpg /usr/share/nginx/html
+RUN mkdir -p /usr/share/nginx/html/diplom
+COPY index.html /usr/share/nginx/html/diplom
+COPY picture.jpg /usr/share/nginx/html/diplom
+
 
 
