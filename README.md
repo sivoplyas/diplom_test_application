@@ -1,2 +1,1 @@
-# diplom_test_application
-diplom_test_application
+# Репозиторий тестового приложения для дипломной работы
